@@ -492,12 +492,16 @@ export default function App() {
   const [currentBlock, setCurrentBlock] = useState(null);
   const [lang, setLang] = useState("en");
   const [completionMap, setCompletionMap] = useState({});
+  const [now, setNow] = useState(new Date());
 
   useEffect(() => {
     const today = new Date().toLocaleString("en-US", { weekday: "long" });
     setCurrentDay(today);
     const block = getCurrentBlock(schedule[today] || []);
     setCurrentBlock(block);
+
+    const interval = setInterval(() => setNow(new Date()), 60000);
+    return () => clearInterval(interval);
   }, []);
 
   const blocks = schedule[currentDay] || [];
@@ -517,6 +521,21 @@ export default function App() {
       };
     });
   };
+
+  const toMinutes = (timeStr) => {
+    const [raw, period] = timeStr.split(" ");
+    let [h, m] = raw.split(":").map(Number);
+    if (period === "PM" && h !== 12) h += 12;
+    if (period === "AM" && h === 12) h = 0;
+    return h * 60 + m;
+  };
+
+  const missedBlocks = blocks.filter((block) => {
+    const [_, endStr] = block.time.split("–").map((t) => t.trim());
+    const blockEnd = toMinutes(endStr) + 60; // 1-hour buffer
+    const nowMins = now.getHours() * 60 + now.getMinutes();
+    return nowMins > blockEnd && !completionMap[block.label]?.done;
+  });
 
   return (
     <div className="App">
@@ -542,6 +561,11 @@ export default function App() {
         {blocks.map((block, idx) => {
           const done = completionMap[block.label]?.done;
           const time = completionMap[block.label]?.time;
+          const [_, endStr] = block.time.split("–").map((t) => t.trim());
+          const blockEnd = toMinutes(endStr) + 60;
+          const nowMins = now.getHours() * 60 + now.getMinutes();
+          const isExpired = nowMins > blockEnd;
+
           return (
             <div
               key={idx}
@@ -558,8 +582,9 @@ export default function App() {
                   type="checkbox"
                   checked={done || false}
                   onChange={() => handleTick(block.label)}
+                  disabled={isExpired && !done}
                 />{" "}
-                {done ? "Done" : "Mark as done"}
+                {done ? "Done" : isExpired ? "Expired" : "Mark as done"}
               </label>
               {done && time && (
                 <div className="timestamp">Marked done at {time}</div>
@@ -567,6 +592,26 @@ export default function App() {
             </div>
           );
         })}
+      </div>
+
+      <div className="summary">
+        <h2>🧾 Daily Summary</h2>
+        <p>
+          ✔️ Completed:{" "}
+          {Object.values(completionMap).filter((v) => v.done).length} of{" "}
+          {blocks.length}
+        </p>
+        {missedBlocks.length > 0 && (
+          <div>
+            <p>❌ Missed:</p>
+            <ul>
+              {missedBlocks.map((b, i) => (
+                <li key={i}>{b.label}</li>
+              ))}
+            </ul>
+          </div>
+        )}
+        {missedBlocks.length === 0 && <p>👏 All done! Great job today!</p>}
       </div>
     </div>
   );
