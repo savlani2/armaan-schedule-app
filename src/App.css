@@ -1,72 +1,44 @@
+body {
+  margin: 0;
+  font-family: "Quicksand", sans-serif;
+  background: linear-gradient(to bottom, #f3f7fd, #ffffff);
+}
+
 .App {
-  font-family: sans-serif;
-  padding: 2rem;
-  background: #fdfdfd;
+  max-width: 640px;
+  margin: auto;
+  padding: 1.5rem;
+}
+
+.language-toggle {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 1rem;
+  gap: 1rem;
+}
+
+.language-toggle button {
+  padding: 0.5rem 1rem;
+  font-size: 1rem;
+  cursor: pointer;
+  border: 1px solid #ccc;
+  background: #fff;
+  border-radius: 6px;
+}
+
+.language-toggle button.active {
+  background: #007bff;
+  color: #fff;
+  border-color: #007bff;
 }
 
 .title {
   text-align: center;
-  font-size: 1.8rem;
-  margin-bottom: 2rem;
-  color: #333;
-}
-
-.schedule-list {
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-}
-
-.schedule-block {
-  border-radius: 10px;
-  padding: 1rem;
-  background-color: #f0f0f0;
-  border-left: 4px solid transparent;
-  transition: background-color 0.3s ease;
-}
-
-.schedule-block .block-header {
-  font-weight: bold;
-  font-size: 1.1rem;
-  margin-bottom: 0.5rem;
+  font-size: 1.5rem;
+  margin-bottom: 1rem;
   color: #444;
 }
 
-.schedule-block .time {
-  font-weight: normal;
-  font-size: 0.9rem;
-  color: #777;
-}
-
-.schedule-block .activity {
-  font-size: 1rem;
-  color: #222;
-  line-height: 1.4;
-}
-
-.schedule-block.current {
-  background-color: #e0f3ff;
-  border-left: 5px solid #007bff;
-  box-shadow: 0 2px 8px rgba(0, 123, 255, 0.1);
-}
-
-.schedule-block.completed {
-  background-color: #e9ecef;
-  color: #888;
-  font-style: italic;
-}
-
-.timestamp {
-  font-size: 0.85rem;
-  color: #555;
-  margin-top: 0.25rem;
-}
-
-.tick {
-  margin-top: 0.5rem;
-  display: block;
-  font-weight: 500;
-}
 .header-banner {
   background: linear-gradient(135deg, #dfefff, #f8f9ff);
   padding: 1.5rem 1rem;
@@ -83,17 +55,89 @@
   font-family: "Quicksand", "Nunito", sans-serif;
   margin: 0;
 }
-body {
-  background: linear-gradient(to bottom, #f3f7fd, #ffffff);
+
+.schedule-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
 }
+
 .schedule-block {
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  border-radius: 10px;
+  padding: 1rem;
+  background-color: #f0f4f7;
+  border-left: 5px solid transparent;
+  transition: all 0.3s ease;
 }
 
 .schedule-block:hover {
   transform: translateY(-2px);
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
+
+.schedule-block.current {
+  animation: pulse 2s infinite;
+  background-color: #e6f2ff;
+  border-left-color: #007bff;
+  box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.2);
+}
+
+@keyframes pulse {
+  0% {
+    box-shadow: 0 0 0 0 rgba(0, 123, 255, 0.3);
+  }
+  70% {
+    box-shadow: 0 0 0 10px rgba(0, 123, 255, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(0, 123, 255, 0);
+  }
+}
+
+.schedule-block.completed {
+  background-color: #e0e0e0;
+  color: #666;
+  font-style: italic;
+}
+
+.block-header {
+  font-weight: bold;
+  font-size: 1.1rem;
+  margin-bottom: 0.5rem;
+  color: #333;
+}
+
+.activity {
+  margin-bottom: 0.5rem;
+  font-size: 1rem;
+}
+
+.tick {
+  font-size: 0.95rem;
+  display: block;
+  margin-top: 0.5rem;
+}
+
+.timestamp {
+  font-size: 0.85rem;
+  color: #555;
+  margin-top: 0.25rem;
+}
+
+.countdown {
+  font-size: 1.1rem;
+  font-weight: 500;
+  margin: 0.5rem 0;
+}
+
+.timer-ui {
+  margin-top: 0.5rem;
+  background: #ffffff;
+  padding: 0.5rem;
+  border-radius: 6px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
 .summary {
   margin-top: 2rem;
   background: #f8f9fa;
